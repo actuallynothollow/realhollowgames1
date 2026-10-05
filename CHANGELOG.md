@@ -13,3 +13,8 @@
 - Indie cross being bugged
 - bug that wouldn't let you exit game without 404
 - fixed fnf 404
+
+
+## - version 1.2
+### Added
+-Retrobowl
