@@ -9,6 +9,54 @@ html, body {
 transition: .5s;
 }
 
+html.glitch-arrival body::before {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  content: "";
+  background: #0000ff;
+  pointer-events: none;
+  animation: glitch-arrival-blue 1400ms steps(2, end) both;
+  animation-delay: var(--glitch-phase, 0ms);
+}
+
+html.glitch-arrival body::after {
+  position: fixed;
+  inset: 0;
+  z-index: 100001;
+  content: "";
+  pointer-events: none;
+  background:
+    linear-gradient(0deg, transparent 0 12%, rgba(56, 232, 255, 0.95) 12.5% 14%, transparent 14.5% 36%, rgba(56, 232, 255, 0.65) 36.5% 40%, transparent 40.5% 74%, rgba(56, 232, 255, 0.8) 74.5% 77%, transparent 77.5%),
+    repeating-linear-gradient(0deg, transparent 0 4px, rgba(56, 232, 255, 0.85) 5px 7px, transparent 8px 13px),
+    linear-gradient(0deg, transparent 0 21%, rgba(255, 60, 158, 0.9) 21.5% 24%, transparent 24.5% 49%, rgba(255, 60, 158, 0.7) 49.5% 53%, transparent 53.5% 83%, rgba(255, 60, 158, 0.9) 83.5% 86%, transparent 86.5%),
+    repeating-linear-gradient(0deg, transparent 0 7px, rgba(255, 60, 158, 0.8) 8px 11px, transparent 12px 18px);
+  mix-blend-mode: screen;
+  animation: glitch-arrival-lines 1400ms steps(2, end) both;
+  animation-delay: var(--glitch-phase, 0ms);
+}
+
+@keyframes glitch-arrival-blue {
+  0%, 98% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes glitch-arrival-lines {
+  0% { transform: translate(-2vw, -1vh) skewX(-4deg) scaleX(1.04); clip-path: inset(0); opacity: 0.8; filter: hue-rotate(0deg) contrast(2); }
+  8% { transform: translate(2vw, 1vh) skewX(5deg) scaleX(0.96); clip-path: inset(8% 0 72% 0); opacity: 1; filter: hue-rotate(35deg) contrast(3); }
+  16% { transform: translate(-1vw, -2vh) skewX(-2deg) scaleX(1.08); clip-path: inset(0); opacity: 0.45; filter: hue-rotate(-20deg) contrast(2.5); }
+  25% { transform: translate(3vw, 0) skewX(6deg) scaleX(0.92); clip-path: inset(38% 0 42% 0); opacity: 1; filter: hue-rotate(55deg) contrast(3); }
+  34% { transform: translate(-3vw, 2vh) skewX(-5deg) scaleX(1.06); clip-path: inset(0); opacity: 0.7; filter: hue-rotate(0deg) contrast(2.2); }
+  43% { transform: translate(1vw, -1vh) skewX(3deg) scaleX(0.94); clip-path: inset(74% 0 8% 0); opacity: 1; filter: hue-rotate(-35deg) contrast(3); }
+  52% { transform: translate(-2.5vw, 1vh) skewX(-6deg) scaleX(1.1); clip-path: inset(0); opacity: 0.5; filter: hue-rotate(45deg) contrast(2.6); }
+  61% { transform: translate(2.5vw, -2vh) skewX(4deg) scaleX(0.9); clip-path: inset(19% 0 64% 0); opacity: 1; filter: hue-rotate(0deg) contrast(3); }
+  70% { transform: translate(-1vw, 2vh) skewX(-3deg) scaleX(1.05); clip-path: inset(0); opacity: 0.65; filter: hue-rotate(-45deg) contrast(2.4); }
+  80% { transform: translate(3vw, -1vh) skewX(6deg) scaleX(0.95); clip-path: inset(52% 0 32% 0); opacity: 1; filter: hue-rotate(35deg) contrast(3); }
+  90% { transform: translate(-2vw, 1vh) skewX(-5deg) scaleX(1.08); clip-path: inset(0); opacity: 0.55; filter: hue-rotate(0deg) contrast(2.8); }
+  98% { transform: translate(-2vw, 1vh) skewX(-5deg) scaleX(1.08); clip-path: inset(0); opacity: 0.55; filter: hue-rotate(0deg) contrast(2.8); }
+  100% { transform: translate(0); clip-path: inset(0); opacity: 0; filter: none; }
+}
+
 @font-face {
   font-family: 'facon';
   src: url('assets/facon.ttf') format('truetype');
@@ -154,6 +202,32 @@ transform: translateX(-50%) translateY(-50%);
 100%{transform:rotate(360deg)}
 }
 </style>
+<script>
+var arrivalUrl = new URL(window.location.href);
+if (arrivalUrl.searchParams.get('__glitchArrival') === '1') {
+  var glitchElapsed = Number(arrivalUrl.searchParams.get('__glitchElapsed'));
+  if (!Number.isFinite(glitchElapsed)) glitchElapsed = 0;
+  glitchElapsed = Math.max(0, Math.min(1399, glitchElapsed));
+  var glitchSoundTime = Number(arrivalUrl.searchParams.get('__glitchSoundTime'));
+  if (!Number.isFinite(glitchSoundTime) || glitchSoundTime < 0) glitchSoundTime = 0;
+  document.documentElement.style.setProperty('--glitch-phase', '-' + glitchElapsed + 'ms');
+  arrivalUrl.searchParams.delete('__glitchArrival');
+  arrivalUrl.searchParams.delete('__glitchElapsed');
+  arrivalUrl.searchParams.delete('__glitchSoundTime');
+  window.history.replaceState(window.history.state, '', arrivalUrl.href);
+  document.documentElement.classList.add('glitch-arrival');
+
+  var arrivalSound = new Audio('after_after.mp3');
+  arrivalSound.loop = true;
+  arrivalSound.currentTime = glitchSoundTime;
+  arrivalSound.play().catch(function(error) {
+    console.error('Unable to continue the secret-game outro sound:', error);
+  });
+  window.setTimeout(function() {
+    arrivalSound.pause();
+  }, Math.max(0, 1400 - glitchElapsed));
+}
+</script>
 <script src='i.js'></script>
 </head>
 <body onload="setSavedTheme()">
@@ -188,6 +262,23 @@ transform: translateX(-50%) translateY(-50%);
   <option value="left">Left</option>
   <option value="right">Right</option>
 </select>
+
+<br><hr><br>
+
+<h2>Save Data Backup</h2>
+<p>Download this site’s local storage, this tab’s session storage, and same-origin IndexedDB saves before moving links. Browser security prevents this page from backing up data owned by games on other websites. Backup files may contain private or temporary data; keep them somewhere safe.</p>
+<button type="button" onclick="downloadSiteDataBackup()">Download Backup</button>
+<br><br>
+<label for="siteDataBackupFile">Choose a backup file:</label>
+<input id="siteDataBackupFile" type="file" accept=".json,application/json">
+<button type="button" onclick="restoreSiteDataBackup()">Restore Backup</button>
+<br><br>
+<label for="siteDataBackupText">Or paste the backup file’s contents here:</label>
+<textarea id="siteDataBackupText" rows="8" style="display:block;width:100%;box-sizing:border-box" placeholder="Open your downloaded JSON backup in a text editor, copy everything, and paste it here."></textarea>
+<button type="button" onclick="restorePastedSiteDataBackup()">Restore Pasted Backup</button>
+<p id="siteDataBackupStatus" role="status" aria-live="polite"></p>
+
+<p>To move saves, download the JSON backup, open it in a text editor, copy all its contents, then paste them into the box and choose <b>Restore Pasted Backup</b> at the destination. You can also select the JSON file directly. This includes the active tab’s session storage plus this site’s local storage and same-origin IndexedDB; saves owned by other websites cannot be read here.</p>
 
 <br><hr><br>
 
@@ -473,6 +564,487 @@ applyDisguise();
 BroadcastDisguise.onmessage = () => {
 applyDisguise();
 };
+
+function setSiteDataBackupStatus(message) {
+  l('siteDataBackupStatus').textContent = message;
+}
+
+function encodeBackupValue(value, seen) {
+  if (value === null || typeof value === 'string' || typeof value === 'boolean') return value;
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? value : { $type: 'number', value: String(value) };
+  }
+  if (typeof value === 'undefined') return { $type: 'undefined' };
+  if (typeof value === 'bigint') return { $type: 'bigint', value: String(value) };
+  if (typeof value !== 'object') throw new Error('Unsupported saved value type: ' + typeof value);
+  if (seen.has(value)) throw new Error('Cyclic saved values cannot be exported.');
+  seen.add(value);
+
+  var encoded;
+  if (value instanceof Date) {
+    encoded = { $type: 'date', value: value.toISOString() };
+  } else if (value instanceof RegExp) {
+    encoded = { $type: 'regexp', source: value.source, flags: value.flags };
+  } else if (value instanceof Blob) {
+    encoded = { $type: 'blob', mime: value.type, value: arrayBufferToBase64(value) };
+  } else if (value instanceof ArrayBuffer) {
+    encoded = { $type: 'arraybuffer', value: arrayBufferToBase64(value) };
+  } else if (ArrayBuffer.isView(value)) {
+    encoded = {
+      $type: value instanceof DataView ? 'dataview' : 'typedarray',
+      name: value.constructor.name,
+      value: arrayBufferToBase64(value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength))
+    };
+  } else if (Array.isArray(value)) {
+    encoded = { $type: 'array', value: value.map(function(item) { return encodeBackupValue(item, seen); }) };
+  } else if (value instanceof Map) {
+    encoded = {
+      $type: 'map',
+      value: Array.from(value.entries(), function(entry) {
+        return [encodeBackupValue(entry[0], seen), encodeBackupValue(entry[1], seen)];
+      })
+    };
+  } else if (value instanceof Set) {
+    encoded = { $type: 'set', value: Array.from(value, function(item) { return encodeBackupValue(item, seen); }) };
+  } else if (value instanceof File) {
+    encoded = {
+      $type: 'file',
+      name: value.name,
+      lastModified: value.lastModified,
+      mime: value.type,
+      value: arrayBufferToBase64(value)
+    };
+  } else {
+    var prototype = Object.getPrototypeOf(value);
+    if (prototype !== Object.prototype && prototype !== null) {
+      throw new Error('Unsupported saved value type: ' + (value.constructor && value.constructor.name || 'object'));
+    }
+    encoded = {
+      $type: 'object',
+      value: Object.keys(value).map(function(key) {
+        return [key, encodeBackupValue(value[key], seen)];
+      })
+    };
+  }
+
+  seen.delete(value);
+  return encoded;
+}
+
+function arrayBufferToBase64(blobOrBuffer) {
+  if (blobOrBuffer instanceof Blob) {
+    throw new Error('Blob values must be encoded asynchronously.');
+  }
+  var bytes = new Uint8Array(blobOrBuffer);
+  var binary = '';
+  for (var offset = 0; offset < bytes.length; offset += 0x8000) {
+    binary += String.fromCharCode.apply(null, bytes.subarray(offset, offset + 0x8000));
+  }
+  return btoa(binary);
+}
+
+async function encodeBackupValueAsync(value, seen) {
+  if (value instanceof Blob) {
+    return {
+      $type: value instanceof File ? 'file' : 'blob',
+      name: value instanceof File ? value.name : undefined,
+      lastModified: value instanceof File ? value.lastModified : undefined,
+      mime: value.type,
+      value: arrayBufferToBase64(await value.arrayBuffer())
+    };
+  }
+  if (value && typeof value === 'object' &&
+      !(value instanceof Date) && !(value instanceof RegExp) && !(value instanceof ArrayBuffer) &&
+      !ArrayBuffer.isView(value)) {
+    if (seen.has(value)) throw new Error('Cyclic saved values cannot be exported.');
+    seen.add(value);
+    var encoded;
+    if (Array.isArray(value)) {
+      encoded = { $type: 'array', value: await Promise.all(value.map(function(item) { return encodeBackupValueAsync(item, seen); })) };
+    } else if (value instanceof Map) {
+      encoded = { $type: 'map', value: await Promise.all(Array.from(value.entries(), async function(entry) {
+        return [await encodeBackupValueAsync(entry[0], seen), await encodeBackupValueAsync(entry[1], seen)];
+      })) };
+    } else if (value instanceof Set) {
+      encoded = { $type: 'set', value: await Promise.all(Array.from(value, function(item) { return encodeBackupValueAsync(item, seen); })) };
+    } else {
+      var prototype = Object.getPrototypeOf(value);
+      if (prototype !== Object.prototype && prototype !== null) {
+        seen.delete(value);
+        throw new Error('Unsupported saved value type: ' + (value.constructor && value.constructor.name || 'object'));
+      }
+      encoded = { $type: 'object', value: await Promise.all(Object.keys(value).map(async function(key) {
+        return [key, await encodeBackupValueAsync(value[key], seen)];
+      })) };
+    }
+    seen.delete(value);
+    return encoded;
+  }
+  return encodeBackupValue(value, seen);
+}
+
+function decodeBackupValue(value) {
+  if (!value || typeof value !== 'object' || !value.$type) return value;
+  switch (value.$type) {
+    case 'undefined': return undefined;
+    case 'number': return Number(value.value);
+    case 'bigint': return BigInt(value.value);
+    case 'date': return new Date(value.value);
+    case 'regexp': return new RegExp(value.source, value.flags);
+    case 'arraybuffer':
+    case 'dataview':
+    case 'typedarray':
+    case 'blob':
+    case 'file': {
+      var binary = atob(value.value);
+      var bytes = new Uint8Array(binary.length);
+      for (var byteIndex = 0; byteIndex < binary.length; byteIndex++) bytes[byteIndex] = binary.charCodeAt(byteIndex);
+      if (value.$type === 'arraybuffer') return bytes.buffer;
+      if (value.$type === 'dataview') return new DataView(bytes.buffer);
+      if (value.$type === 'typedarray') {
+        var TypedArray = globalThis[value.name];
+        if (typeof TypedArray !== 'function') throw new Error('Unsupported typed array: ' + value.name);
+        return new TypedArray(bytes.buffer);
+      }
+      var blob = new Blob([bytes], { type: value.mime || '' });
+      return value.$type === 'file'
+        ? new File([blob], value.name || 'backup-file', { type: value.mime || '', lastModified: value.lastModified || 0 })
+        : blob;
+    }
+    case 'array': return value.value.map(decodeBackupValue);
+    case 'map': return new Map(value.value.map(function(entry) { return [decodeBackupValue(entry[0]), decodeBackupValue(entry[1])]; }));
+    case 'set': return new Set(value.value.map(decodeBackupValue));
+    case 'object': {
+      var object = {};
+      value.value.forEach(function(entry) {
+        Object.defineProperty(object, entry[0], {
+          value: decodeBackupValue(entry[1]),
+          enumerable: true,
+          configurable: true,
+          writable: true
+        });
+      });
+      return object;
+    }
+    default: throw new Error('Unsupported backup value type: ' + value.$type);
+  }
+}
+
+function requestResult(request) {
+  return new Promise(function(resolve, reject) {
+    request.onsuccess = function() { resolve(request.result); };
+    request.onerror = function() { reject(request.error || new Error('IndexedDB request failed')); };
+  });
+}
+
+async function exportIndexedDB() {
+  var idb = window.indexedDB;
+  if (!idb || !idb.databases) {
+    return { databases: [], warnings: ['This browser cannot list IndexedDB databases.'] };
+  }
+
+  var databases = [];
+  var warnings = [];
+  var listed;
+  try {
+    listed = await idb.databases();
+  } catch (error) {
+    return { databases: [], warnings: ['Could not list IndexedDB databases: ' + error.message] };
+  }
+  for (var databaseInfo of listed) {
+    if (!databaseInfo.name) continue;
+    var database;
+    try {
+      database = await requestResult(idb.open(databaseInfo.name));
+      var snapshot = { name: database.name, version: database.version, stores: [] };
+      for (var storeName of Array.from(database.objectStoreNames)) {
+        var transaction = database.transaction(storeName, 'readonly');
+        var store = transaction.objectStore(storeName);
+        var keysRequest = store.getAllKeys();
+        var valuesRequest = store.getAll();
+        var results = await Promise.all([requestResult(keysRequest), requestResult(valuesRequest)]);
+        await new Promise(function(resolve, reject) {
+          transaction.oncomplete = resolve;
+          transaction.onerror = function() { reject(transaction.error || new Error('IndexedDB read failed')); };
+          transaction.onabort = function() { reject(transaction.error || new Error('IndexedDB read was aborted')); };
+        });
+        var storeSnapshot = {
+          name: store.name,
+          keyPath: store.keyPath,
+          autoIncrement: store.autoIncrement,
+          indexes: Array.from(store.indexNames, function(indexName) {
+            var index = store.index(indexName);
+            return { name: index.name, keyPath: index.keyPath, unique: index.unique, multiEntry: index.multiEntry };
+          }),
+          records: []
+        };
+        for (var recordIndex = 0; recordIndex < results[0].length; recordIndex++) {
+          storeSnapshot.records.push({
+            key: await encodeBackupValueAsync(results[0][recordIndex], new WeakSet()),
+            value: await encodeBackupValueAsync(results[1][recordIndex], new WeakSet())
+          });
+        }
+        snapshot.stores.push(storeSnapshot);
+      }
+      databases.push(snapshot);
+    } catch (error) {
+      warnings.push('Could not back up IndexedDB "' + databaseInfo.name + '": ' + error.message);
+    } finally {
+      if (database) database.close();
+    }
+  }
+  return { databases: databases, warnings: warnings };
+}
+
+async function createSiteDataBackup() {
+  var storedEntries = [];
+  for (var index = 0; index < localStorage.length; index++) {
+    var key = localStorage.key(index);
+    storedEntries.push({ key: key, value: localStorage.getItem(key) });
+  }
+  var sessionEntries = [];
+  for (var sessionIndex = 0; sessionIndex < sessionStorage.length; sessionIndex++) {
+    var sessionKey = sessionStorage.key(sessionIndex);
+    sessionEntries.push({ key: sessionKey, value: sessionStorage.getItem(sessionKey) });
+  }
+  var indexedDBBackup = await exportIndexedDB();
+  return {
+    backup: {
+      format: 'hollowgames-local-storage-backup',
+      version: 3,
+      exportedAt: new Date().toISOString(),
+      source: window.location.origin,
+      storage: storedEntries,
+      sessionStorage: sessionEntries,
+      indexedDB: indexedDBBackup.databases,
+      warnings: indexedDBBackup.warnings
+    },
+    storageCount: storedEntries.length,
+    sessionCount: sessionEntries.length,
+    databaseCount: indexedDBBackup.databases.length,
+    warnings: indexedDBBackup.warnings
+  };
+}
+
+async function downloadSiteDataBackup() {
+  setSiteDataBackupStatus('Collecting browser saves...');
+  try {
+    var snapshot = await createSiteDataBackup();
+    var backup = snapshot.backup;
+    var file = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+    var downloadUrl = URL.createObjectURL(file);
+    var link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = 'hollowgames-data-backup.json';
+    link.click();
+    window.setTimeout(function() { URL.revokeObjectURL(downloadUrl); }, 1000);
+    var message = 'Backup downloaded: ' + snapshot.storageCount + ' local-storage entries, ' +
+      snapshot.sessionCount + ' session-storage entries and ' +
+      snapshot.databaseCount + ' IndexedDB database(s).';
+    if (snapshot.warnings.length) message += ' Some data could not be captured; see backup warnings.';
+    setSiteDataBackupStatus(message);
+  } catch (error) {
+    setSiteDataBackupStatus('Backup failed: ' + error.message);
+  }
+}
+
+async function restorePastedSiteDataBackup() {
+  var rawBackup = l('siteDataBackupText').value.trim();
+  if (!rawBackup) {
+    setSiteDataBackupStatus('Paste the contents of your backup JSON file into the box first.');
+    return;
+  }
+  try {
+    await restoreSiteDataBackupObject(JSON.parse(rawBackup));
+  } catch (error) {
+    setSiteDataBackupStatus('Could not read the pasted backup: ' + error.message);
+  }
+}
+
+async function restoreSiteDataBackup() {
+  var fileInput = l('siteDataBackupFile');
+  var file = fileInput.files && fileInput.files[0];
+  if (!file) {
+    setSiteDataBackupStatus('Choose a backup JSON file first.');
+    return;
+  }
+
+  var backup;
+  try {
+    backup = JSON.parse(await file.text());
+  } catch (error) {
+    setSiteDataBackupStatus('Could not read the backup file: ' + error.message);
+    return;
+  }
+
+  await restoreSiteDataBackupObject(backup);
+}
+
+async function restoreSiteDataBackupObject(backup) {
+  if (!backup || backup.format !== 'hollowgames-local-storage-backup' ||
+      ![1, 2, 3].includes(backup.version) || !Array.isArray(backup.storage) ||
+      (backup.version >= 2 && !Array.isArray(backup.indexedDB)) ||
+      (backup.version >= 3 && !Array.isArray(backup.sessionStorage))) {
+    setSiteDataBackupStatus('That file is not a supported HollowGames data backup.');
+    return false;
+  }
+
+  var restoredEntries = [];
+  var seenKeys = Object.create(null);
+  for (var index = 0; index < backup.storage.length; index++) {
+    var entry = backup.storage[index];
+    if (!entry || typeof entry.key !== 'string' || typeof entry.value !== 'string' ||
+        Object.prototype.hasOwnProperty.call(seenKeys, entry.key)) {
+      setSiteDataBackupStatus('The backup contains an invalid or duplicate storage entry.');
+      return false;
+    }
+    seenKeys[entry.key] = true;
+    restoredEntries.push(entry);
+  }
+
+  var restoredSessionEntries = [];
+  var seenSessionKeys = Object.create(null);
+  for (var sessionIndex = 0; sessionIndex < (backup.sessionStorage || []).length; sessionIndex++) {
+    var sessionEntry = backup.sessionStorage[sessionIndex];
+    if (!sessionEntry || typeof sessionEntry.key !== 'string' || typeof sessionEntry.value !== 'string' ||
+        Object.prototype.hasOwnProperty.call(seenSessionKeys, sessionEntry.key)) {
+      setSiteDataBackupStatus('The backup contains an invalid or duplicate session-storage entry.');
+      return false;
+    }
+    seenSessionKeys[sessionEntry.key] = true;
+    restoredSessionEntries.push(sessionEntry);
+  }
+
+  var databaseSnapshots = backup.indexedDB || [];
+  var decodedDatabases;
+  try {
+    decodedDatabases = databaseSnapshots.map(function(database) {
+      if (!database || typeof database.name !== 'string' || !Number.isInteger(database.version) ||
+          !Array.isArray(database.stores)) throw new Error('Invalid IndexedDB database snapshot.');
+      return {
+        name: database.name,
+        version: database.version,
+        stores: database.stores.map(function(store) {
+          if (!store || typeof store.name !== 'string' || !Array.isArray(store.records) || !Array.isArray(store.indexes)) {
+            throw new Error('Invalid IndexedDB object-store snapshot.');
+          }
+          return {
+            name: store.name,
+            keyPath: store.keyPath,
+            autoIncrement: store.autoIncrement,
+            indexes: store.indexes,
+            records: store.records.map(function(record) {
+              return { key: decodeBackupValue(record.key), value: decodeBackupValue(record.value) };
+            })
+          };
+        })
+      };
+    });
+  } catch (error) {
+    setSiteDataBackupStatus('The backup contains invalid IndexedDB data: ' + error.message);
+    return false;
+  }
+
+  if (!window.confirm('Restoring this backup replaces this site URL’s local storage, this tab’s session storage, and the IndexedDB databases included in the backup. Continue?')) {
+    setSiteDataBackupStatus('Restore cancelled.');
+    return false;
+  }
+
+  try {
+    for (var databaseSnapshot of decodedDatabases) {
+      await replaceIndexedDB(databaseSnapshot);
+    }
+  } catch (error) {
+    setSiteDataBackupStatus('IndexedDB restore failed: ' + error.message + '. Local storage was left unchanged.');
+    return false;
+  }
+
+  var previousEntries = [];
+  var previousSessionEntries = [];
+  try {
+    for (var currentIndex = 0; currentIndex < localStorage.length; currentIndex++) {
+      var currentKey = localStorage.key(currentIndex);
+      previousEntries.push({ key: currentKey, value: localStorage.getItem(currentKey) });
+    }
+    for (var currentSessionIndex = 0; currentSessionIndex < sessionStorage.length; currentSessionIndex++) {
+      var currentSessionKey = sessionStorage.key(currentSessionIndex);
+      previousSessionEntries.push({ key: currentSessionKey, value: sessionStorage.getItem(currentSessionKey) });
+    }
+
+    localStorage.clear();
+    restoredEntries.forEach(function(entry) {
+      localStorage.setItem(entry.key, entry.value);
+    });
+    sessionStorage.clear();
+    restoredSessionEntries.forEach(function(entry) {
+      sessionStorage.setItem(entry.key, entry.value);
+    });
+  } catch (error) {
+    try {
+      localStorage.clear();
+      previousEntries.forEach(function(entry) {
+        localStorage.setItem(entry.key, entry.value);
+      });
+      sessionStorage.clear();
+      previousSessionEntries.forEach(function(entry) {
+        sessionStorage.setItem(entry.key, entry.value);
+      });
+    } catch (restoreError) {
+      console.error('Failed to roll back browser storage after a backup restore error:', restoreError);
+      setSiteDataBackupStatus('Restore failed and the previous browser storage could not be fully restored: ' + restoreError.message);
+      return false;
+    }
+    setSiteDataBackupStatus('Restore failed; the previous data was restored: ' + error.message);
+    return false;
+  }
+
+  setSiteDataBackupStatus('Backup restored. Reloading settings...');
+  window.setTimeout(function() {
+    window.location.reload();
+  }, 500);
+  return true;
+}
+
+function deleteIndexedDB(name) {
+  return new Promise(function(resolve, reject) {
+    var request = indexedDB.deleteDatabase(name);
+    request.onsuccess = function() { resolve(); };
+    request.onerror = function() { reject(request.error || new Error('Could not delete database "' + name + '"')); };
+    request.onblocked = function() { reject(new Error('Database "' + name + '" is open in another tab. Close the site’s other tabs and try again.')); };
+  });
+}
+
+async function replaceIndexedDB(snapshot) {
+  await deleteIndexedDB(snapshot.name);
+  await new Promise(function(resolve, reject) {
+    var request = indexedDB.open(snapshot.name, snapshot.version);
+    request.onupgradeneeded = function() {
+      var database = request.result;
+      snapshot.stores.forEach(function(storeSnapshot) {
+        var store = database.createObjectStore(storeSnapshot.name, {
+          keyPath: storeSnapshot.keyPath,
+          autoIncrement: storeSnapshot.autoIncrement
+        });
+        storeSnapshot.indexes.forEach(function(index) {
+          store.createIndex(index.name, index.keyPath, {
+            unique: index.unique,
+            multiEntry: index.multiEntry
+          });
+        });
+        storeSnapshot.records.forEach(function(record) {
+          if (storeSnapshot.keyPath === null) store.put(record.value, record.key);
+          else store.put(record.value);
+        });
+      });
+    };
+    request.onsuccess = function() {
+      request.result.close();
+      resolve();
+    };
+    request.onerror = function() { reject(request.error || new Error('Could not restore database "' + snapshot.name + '"')); };
+    request.onblocked = function() { reject(new Error('Database "' + snapshot.name + '" is open in another tab.')); };
+  });
+}
 </script>
 </body>
 </html>

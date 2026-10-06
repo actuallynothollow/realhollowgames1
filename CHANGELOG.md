@@ -18,4 +18,10 @@
 ## - version 1.2
 ### Added
 -Retrobowl
--14 of the papas games
+<<<<<<< HEAD
+-14 of the Papa's games
+-Import/export save data (in beta)
+=======
+-Papas Games
+-import export save data (inbeta)
+>>>>>>> 52f0e33 (huge update)
