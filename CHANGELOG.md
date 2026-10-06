@@ -1,5 +1,9 @@
-## - version 1.1
-### Added
+# HollowGames Changelog
+
+## Version 1.1
+
+### Added in 1.1
+
 - DogeMiner.
 - GunSpin
 - Case Clicker 1
@@ -7,21 +11,18 @@
 - BLOODMONEY!
 - Buckshot-Roulette
 
-### Fixed
-- bug that didn't let you exit settings without a error
+### Fixed in 1.1
+
+- Bug that didn't let you exit settings without an error
 - Friday Night Funkin being blocked
-- Indie cross being bugged
-- bug that wouldn't let you exit game without 404
-- fixed fnf 404
+- Indie Cross being bugged
+- Bug that wouldn't let you exit a game without a 404
+- Fixed FNF 404
 
+## Version 1.2
 
-## - version 1.2
-### Added
--Retrobowl
-<<<<<<< HEAD
--14 of the Papa's games
--Import/export save data (in beta)
-=======
--Papas Games
--import export save data (inbeta)
->>>>>>> 52f0e33 (huge update)
+### Added in 1.2
+
+- Retro Bowl
+- 14 of the Papa's games
+- Import/export save data (in beta)
