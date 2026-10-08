@@ -21,6 +21,15 @@
     "image": "g/g/game 12364/img/verity.png",
     "destination": "Settings.html",
     "cinematic": "short"
+  },
+  "verity": {
+    "item": true,
+    "codeName": "Falsity",
+    "itemName": "Falsity",
+    "rarity": "legendary",
+    "image": "g/g/game 12364/img/verity.png",
+    "destination": "Settings.html",
+    "cinematic": "short"
   }
 }
 
