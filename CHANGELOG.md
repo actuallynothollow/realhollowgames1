@@ -26,3 +26,7 @@
 - Retro Bowl
 - 14 of the Papa's games
 - Import/export save data (in beta)
+  
+## Version 1.3 the hacking update
+
+  
