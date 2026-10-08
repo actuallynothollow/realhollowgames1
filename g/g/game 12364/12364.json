@@ -34,9 +34,9 @@
   "48593": {
     "item": true,
     "codeName": "48593",
-    "itemName": "Gayity",
-    "rarity": "mythic",
-    "image": "g/g/game 12364/img/gayity.png",
+    "itemName": "Lovity",
+    "rarity": "common",
+    "image": "g/g/game 12364/img/lovity.png",
     "destination": "Settings.html",
     "cinematic": "short"
   }
