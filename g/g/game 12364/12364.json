@@ -30,6 +30,15 @@
     "image": "g/g/game 12364/img/falsity.png",
     "destination": "Settings.html",
     "cinematic": "short"
+   },
+  "48593": {
+    "item": true,
+    "codeName": "48593",
+    "itemName": "Gayity",
+    "rarity": "mythic",
+    "image": "g/g/game 12364/img/gayity.png",
+    "destination": "Settings.html",
+    "cinematic": "short"
   }
 }
 
