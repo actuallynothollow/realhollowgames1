@@ -66,6 +66,85 @@ inset: 0;
 animation: none;
 }
 
+.secret-activation.short-mode {
+background: #000;
+}
+
+.secret-activation.active.item-unlock-mode {
+animation: none;
+}
+
+.secret-activation.active.short-mode:not(.show-terminal)::before,
+.secret-activation.active.short-mode:not(.show-terminal)::after,
+.secret-activation.short-mode .secret-activation-title::before,
+.secret-activation.short-mode .secret-activation-title::after {
+display: none;
+}
+
+.secret-activation.active.short-mode:not(.show-terminal) .secret-activation-title {
+position: relative;
+top: auto;
+left: auto;
+animation: none;
+filter: none;
+clip-path: none;
+transform: none;
+}
+
+.secret-activation.active.short-mode .secret-activation-title.item-code-fade {
+animation: item-code-fade-out 0.7s ease-out both;
+}
+
+.secret-activation.item-unlock-shaking {
+animation: none;
+}
+
+.item-unlock-title {
+position: absolute;
+top: 42%;
+left: 50%;
+z-index: 2;
+margin: 0;
+color: #65ff8f;
+font: 900 clamp(2.5rem, 12vw, 8rem)/1 monospace;
+letter-spacing: 0.06em;
+text-align: center;
+text-shadow: 0 0 18px rgba(101, 255, 143, 0.95), 0 0 48px rgba(101, 255, 143, 0.65);
+}
+
+.item-reveal-stage {
+position: absolute;
+inset: 0;
+z-index: 2;
+pointer-events: none;
+}
+
+.item-reveal-stage[hidden] {
+display: none;
+}
+
+.item-unlock-title.boom-in {
+animation: item-title-boom 0.65s cubic-bezier(0.16, 1.4, 0.3, 1) both;
+}
+
+.item-unlock-title.pan-up {
+animation: item-title-pan-up 1.8s ease-in-out both;
+}
+
+.item-reward.reveal {
+animation: item-reward-fade-in 1.8s ease-out both;
+}
+
+.item-reward-image.rarity-glow {
+animation: item-rarity-glow 1s ease-out 1.6s both;
+}
+
+@keyframes item-rarity-glow {
+0%, 100% { filter: drop-shadow(0 0 0 transparent); }
+18% { filter: drop-shadow(0 0 9px var(--rarity-glow)) drop-shadow(0 0 20px var(--rarity-glow)); }
+42% { filter: drop-shadow(0 0 15px var(--rarity-glow)) drop-shadow(0 0 30px var(--rarity-glow)); }
+}
+
 .secret-activation.glitch-out {
 animation: activation-glitch-exit 1.4s steps(2, end) both;
 background: #000;
@@ -112,6 +191,14 @@ background:
   linear-gradient(0deg, transparent 0 21%, rgba(255, 60, 158, 0.9) 21.5% 24%, transparent 24.5% 49%, rgba(255, 60, 158, 0.7) 49.5% 53%, transparent 53.5% 83%, rgba(255, 60, 158, 0.9) 83.5% 86%, transparent 86.5%),
   repeating-linear-gradient(0deg, transparent 0 7px, rgba(255, 60, 158, 0.8) 8px 11px, transparent 12px 18px);
 animation: activation-out-magenta 0.13s steps(2, end) infinite;
+}
+
+.secret-activation.active.short-mode.item-unlock-shaking::before {
+display: block;
+inset: 0;
+z-index: 1;
+background: radial-gradient(circle at 50% 45%, rgba(101, 255, 143, 0.22), transparent 55%);
+animation: item-screen-shake 0.075s linear infinite;
 }
 
 .secret-activation.glitch-out .secret-activation-title {
@@ -180,6 +267,36 @@ animation: terminal-caret 0.8s steps(2, end) infinite;
 @keyframes activation-screen-in {
 from { opacity: 0; }
 to { opacity: 1; }
+}
+
+@keyframes item-screen-shake {
+0%, 100% { transform: translate(0, 0); }
+20% { transform: translate(-7px, 4px); }
+40% { transform: translate(6px, -5px); }
+60% { transform: translate(-5px, -3px); }
+80% { transform: translate(7px, 5px); }
+}
+
+@keyframes item-title-boom {
+0% { opacity: 0; transform: translate(-50%, -50%) scale(0.12); filter: blur(12px); }
+65% { opacity: 1; transform: translate(-50%, -50%) scale(1.18); filter: blur(0); }
+82% { transform: translate(-50%, -50%) scale(0.94); }
+100% { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: blur(0); }
+}
+
+@keyframes item-code-fade-out {
+from { opacity: 1; transform: scale(1); }
+to { opacity: 0; transform: scale(0.9); }
+}
+
+@keyframes item-title-pan-up {
+from { transform: translate(-50%, -50%); }
+to { transform: translate(-50%, calc(-50% - 22vh)); }
+}
+
+@keyframes item-reward-fade-in {
+from { opacity: 0; transform: translate(-50%, 24px) scale(0.94); }
+to { opacity: 1; transform: translate(-50%, 0) scale(1); }
 }
 
 @keyframes terminal-caret {
@@ -297,6 +414,18 @@ animation: none;
 }
 }
 
+@media (prefers-reduced-motion: reduce) {
+.secret-activation.item-unlock-shaking,
+.secret-activation.item-unlock-shaking::before,
+.secret-activation.active.short-mode .secret-activation-title.item-code-fade,
+.item-unlock-title.boom-in,
+.item-unlock-title.pan-up,
+.item-reward.reveal,
+.item-reward-image.rarity-glow {
+animation: none;
+}
+}
+
 @font-face {
 font-family: 'facon';
 src: url('assets/facon.ttf') format('truetype');
@@ -392,6 +521,104 @@ cursor: pointer;
 background: var(--nc-bg-3);
 }
 
+.collection-tabs {
+display: flex;
+gap: 8px;
+margin: 20px;
+}
+
+.collection-tabs button[aria-selected="true"] {
+font-weight: bold;
+}
+
+.items-unlocked-hint {
+margin: 0 20px;
+color: #65ff8f;
+font: bold 1rem monospace;
+}
+
+.items-unlocked-hint[hidden] {
+display: none;
+}
+
+.items-unlocked-hint.fade-in {
+animation: items-hint-fade-in 0.9s ease-out both;
+}
+
+@keyframes items-hint-fade-in {
+from { opacity: 0; transform: translateY(8px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.item-reward {
+position: absolute;
+top: 50%;
+left: 50%;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 12px;
+transform: translateX(-50%);
+color: #65ff8f;
+font: bold clamp(1.2rem, 4vw, 2rem) monospace;
+text-align: center;
+}
+
+.item-reward[hidden] {
+display: none;
+}
+
+.item-reward img {
+max-width: min(60vw, 240px);
+max-height: 30vh;
+object-fit: contain;
+}
+
+.item-rarity {
+margin: 0;
+font: bold 0.85em monospace;
+}
+
+.item-rarity-common {
+color: #39d353;
+}
+
+.item-rarity-rare {
+color: #38aaff;
+}
+
+.item-rarity-epic {
+color: #c77dff;
+}
+
+.item-rarity-legendary {
+color: #ffd447;
+}
+
+.item-rarity-mythic {
+color: #ff4d5e;
+}
+
+.item-rarity-common.rarity-glow {
+--rarity-glow: #39d353;
+}
+
+.item-rarity-rare.rarity-glow {
+--rarity-glow: #38aaff;
+}
+
+.item-rarity-epic.rarity-glow {
+--rarity-glow: #c77dff;
+}
+
+.item-rarity-legendary.rarity-glow {
+--rarity-glow: #ffd447;
+}
+
+.item-rarity-mythic.rarity-glow {
+--rarity-glow: #ff4d5e;
+}
+
 .shade {
 opacity: 0.7;
 background-color: var(--nc-bg-3);
@@ -444,11 +671,22 @@ transform: translateX(-50%) translateY(-50%);
 <body onload="setSavedTheme()">
 <div id="secretActivation" class="secret-activation" aria-hidden="true">
   <h1 class="secret-activation-title" data-text="SECRET GAME ACTIVATED">SECRET GAME ACTIVATED</h1>
+  <div id="secretItemRevealStage" class="item-reveal-stage" hidden>
+    <h2 id="secretItemUnlockedTitle" class="item-unlock-title">ITEM UNLOCKED</h2>
+    <div id="secretItemReward" class="item-reward" hidden>
+      <p id="secretItemRewardName"></p>
+      <p id="secretItemRewardRarity" class="item-rarity"></p>
+      <img id="secretItemRewardImage" alt="">
+    </div>
+  </div>
   <pre id="secretTerminal" class="secret-terminal" aria-live="polite"></pre>
 </div>
 <audio id="secretSoundOne" src="before.mp3" preload="auto"></audio>
 <audio id="secretSoundTwo" src="after.mp3" preload="auto"></audio>
 <audio id="secretSoundThree" src="after_after.mp3" preload="auto"></audio>
+<audio id="itemCodeActivatedSound" src="g/g/game 12364/sounds/cheat-code-unlocked.mp3" preload="auto"></audio>
+<audio id="itemRevealSound" src="g/g/game 12364/sounds/item-reveal.mp3" preload="auto"></audio>
+<audio id="itemGlowSound" src="g/g/game 12364/sounds/rarity-glow.mp3" preload="auto"></audio>
 
 <header>
 <h1 class="title">HollowGames</h1>
@@ -484,6 +722,11 @@ transform: translateX(-50%) translateY(-50%);
 </div>
 </div>
 
+<div class="collection-tabs" role="tablist" aria-label="Collections">
+<button id="gamesTab" type="button" role="tab" aria-selected="true">Games</button>
+<button id="itemsTab" type="button" role="tab" aria-selected="false" hidden>Items</button>
+</div>
+<p id="itemsUnlockedHint" class="items-unlocked-hint" aria-live="polite" hidden>You can now view your items in the Items menu.</p>
 
 <div id="contain">
 
@@ -491,6 +734,11 @@ transform: translateX(-50%) translateY(-50%);
 <a href="g/about.html" class="tile"><img class="img" src="img/hollow.png"><p class="name">About</p></a>
 <a href="suggest.html" class="tile"><img class="img" src="img/hollow.png"><p class="name">Suggest Games</p></a>
 
+</div>
+
+<div id="itemsPanel" role="tabpanel" hidden>
+<div id="ownedItems"></div>
+<p id="emptyItemsMessage">No items unlocked yet.</p>
 </div>
 
 <div id="searcher">
@@ -541,6 +789,86 @@ var secretCodeDestinations = Object.create(null);
 var secretCodeRegistryReady = false;
 var secretActivationStarted = false;
 var titleGlitchInterval;
+var ownedItemStorageKey = 'hollowgamesOwnedItems';
+
+function getOwnedItems() {
+  var storedItems;
+  try {
+    storedItems = localStorage.getItem(ownedItemStorageKey);
+  } catch (error) {
+    console.error('Unable to access saved owned items:', error);
+    return [];
+  }
+  if (!storedItems) return [];
+  try {
+    var items = JSON.parse(storedItems);
+    if (!Array.isArray(items) || items.some(function(item) {
+      return !item || typeof item.code !== 'string' ||
+        typeof item.name !== 'string' || typeof item.image !== 'string' ||
+        (item.rarity !== undefined && (
+          typeof item.rarity !== 'string' ||
+          ['Common', 'Rare', 'Epic', 'Legendary', 'Mythic'].indexOf(item.rarity) === -1
+        ));
+    })) {
+      throw new Error('Saved owned items have an invalid format');
+    }
+    return items;
+  } catch (error) {
+    console.error('Unable to read saved owned items:', error);
+    return [];
+  }
+}
+
+function renderOwnedItems() {
+  var container = l('ownedItems');
+  container.textContent = '';
+  var items = secretCodeRegistryReady
+    ? getOwnedItems().filter(function(item) {
+      var code = item.code.trim().toLowerCase();
+      return Object.prototype.hasOwnProperty.call(secretCodeDestinations, code) &&
+        secretCodeDestinations[code].item !== null;
+    })
+    : [];
+  items.forEach(function(item) {
+    var tile = document.createElement('div');
+    tile.className = 'tile';
+    var image = document.createElement('img');
+    image.className = 'img';
+    image.src = item.image;
+    image.alt = item.name;
+    var name = document.createElement('p');
+    name.className = 'name';
+    name.textContent = item.name;
+    tile.appendChild(image);
+    tile.appendChild(name);
+    if (item.rarity) {
+      var rarity = document.createElement('p');
+      rarity.className = 'item-rarity item-rarity-' + item.rarity.toLowerCase();
+      rarity.textContent = item.rarity;
+      tile.appendChild(rarity);
+    }
+    container.appendChild(tile);
+  });
+  l('emptyItemsMessage').hidden = items.length > 0;
+  l('itemsTab').hidden = items.length === 0;
+}
+
+function selectCollection(collection) {
+  var showingItems = collection === 'items';
+  l('contain').hidden = showingItems;
+  l('itemsPanel').hidden = !showingItems;
+  l('gamesTab').setAttribute('aria-selected', String(!showingItems));
+  l('itemsTab').setAttribute('aria-selected', String(showingItems));
+  if (showingItems) renderOwnedItems();
+}
+
+l('gamesTab').addEventListener('click', function() {
+  selectCollection('games');
+});
+l('itemsTab').addEventListener('click', function() {
+  selectCollection('items');
+});
+renderOwnedItems();
 
 function loadSecretCodeRegistry() {
   fetch('g/g/game 12364/12364.json', { cache: 'no-cache' })
@@ -552,35 +880,81 @@ function loadSecretCodeRegistry() {
     })
     .then(function(registry) {
       if (!registry || typeof registry !== 'object' || Array.isArray(registry)) {
-        throw new Error('The secret-code registry must be a JSON object mapping code names to HTML pages');
+        throw new Error('The secret-code registry must be a JSON object mapping code names to destinations and cinematic modes');
       }
 
       var destinations = Object.create(null);
       Object.keys(registry).forEach(function(code) {
-        var html = registry[code];
-        if (typeof html !== 'string') {
+        var entry = registry[code];
+        var isItem = typeof entry !== 'string' && entry && entry.item === true;
+        var html = typeof entry === 'string' ? entry : entry && entry.destination;
+        var cinematic = typeof entry === 'string'
+          ? 'long'
+          : entry && entry.cinematic !== undefined ? entry.cinematic : 'long';
+        if (typeof entry !== 'string' && entry && entry.item !== undefined && typeof entry.item !== 'boolean') {
+          throw new Error('Item flag for cheat code "' + code + '" must be true or false');
+        }
+
+        if (!isItem && typeof html !== 'string') {
           throw new Error('Destination for cheat code "' + code + '" must be a string');
         }
 
         var name = code.trim().toLowerCase();
-        html = html.trim();
-        if (!name || !html) {
+        if (!name || (!isItem && !html.trim())) {
           throw new Error('Cheat code names and destinations cannot be empty');
         }
+        if (cinematic !== 'short' && cinematic !== 'long') {
+          throw new Error('Cinematic for cheat code "' + name + '" must be "short" or "long"');
+        }
 
-        var target = new URL(html, window.location.href);
-        if (target.origin !== window.location.origin || !/\.html$/i.test(target.pathname)) {
-          throw new Error('Destination for cheat code "' + name + '" must be a same-site HTML page');
+        var itemConfig = null;
+        if (isItem) {
+          var codeName = typeof entry.codeName === 'string' ? entry.codeName.trim() : code;
+          var itemName = typeof entry.itemName === 'string'
+            ? entry.itemName.trim()
+            : typeof entry.name === 'string' ? entry.name.trim() : '';
+          var rarity = typeof entry.rarity === 'string' ? entry.rarity.trim().toLowerCase() : '';
+          var rarities = {
+            common: 'Common',
+            rare: 'Rare',
+            epic: 'Epic',
+            legendary: 'Legendary',
+            mythic: 'Mythic'
+          };
+          if (!codeName || !itemName || typeof entry.image !== 'string' || !entry.image.trim() || !rarities[rarity]) {
+            throw new Error('Item cheat code "' + name + '" must provide codeName, itemName, a supported rarity, and an image path');
+          }
+          var itemImage = new URL(entry.image.trim(), window.location.href);
+          if (itemImage.protocol !== 'http:' && itemImage.protocol !== 'https:') {
+            throw new Error('Image for item cheat code "' + name + '" must use HTTP or HTTPS');
+          }
+          itemConfig = {
+            codeName: codeName,
+            itemName: itemName,
+            image: entry.image.trim(),
+            rarity: rarities[rarity]
+          };
+        } else {
+          html = html.trim();
+          var target = new URL(html, window.location.href);
+          if (target.origin !== window.location.origin || !/\.html$/i.test(target.pathname)) {
+            throw new Error('Destination for cheat code "' + name + '" must be a same-site HTML page');
+          }
         }
         if (Object.prototype.hasOwnProperty.call(destinations, name)) {
           throw new Error('Duplicate cheat code name: ' + name);
         }
 
-        destinations[name] = html;
+        destinations[name] = {
+          destination: isItem ? null : html,
+          cinematic: cinematic,
+          item: itemConfig
+        };
       });
 
       secretCodeDestinations = destinations;
       secretCodeRegistryReady = true;
+      renderOwnedItems();
       if (l('searchQuery')) startSearch();
     })
     .catch(function(error) {
@@ -590,12 +964,122 @@ function loadSecretCodeRegistry() {
 
 loadSecretCodeRegistry();
 
-function activateSecretDestination(secretCode, destination) {
+function activateSecretDestination(secretCode, config) {
 if (secretActivationStarted) return;
+if (config.item && getOwnedItems().some(function(item) {
+  return item.code === secretCode;
+})) return;
 secretActivationStarted = true;
+var destination = config.destination;
+var activation = l('secretActivation');
+var activationTitle = document.querySelector('.secret-activation-title');
+if (config.item) {
+  function playItemSound(sound) {
+    sound.currentTime = 0;
+    sound.play().catch(function(error) {
+      console.error('Item unlock audio playback failed:', error);
+    });
+  }
+
+  var ownedItems = getOwnedItems();
+  var isFirstOwnedItem = ownedItems.length === 0;
+  ownedItems.push({
+    code: secretCode,
+    name: config.item.itemName,
+    image: config.item.image,
+    rarity: config.item.rarity
+  });
+  try {
+    localStorage.setItem(ownedItemStorageKey, JSON.stringify(ownedItems));
+  } catch (error) {
+    console.error('Unable to save unlocked item:', error);
+  }
+  activation.classList.add('active', 'short-mode', 'item-unlock-mode');
+  activation.classList.add('item-unlock-shaking');
+  activation.setAttribute('aria-hidden', 'false');
+  activationTitle.textContent = 'CHEAT CODE UNLOCKED';
+  activationTitle.setAttribute('data-text', activationTitle.textContent);
+  var revealSound = l('itemRevealSound');
+  playItemSound(l('itemCodeActivatedSound'));
+  setTimeout(function() {
+    activation.classList.remove('item-unlock-shaking');
+    activationTitle.classList.add('item-code-fade');
+    setTimeout(function() {
+      activationTitle.hidden = true;
+      activationTitle.classList.remove('item-code-fade');
+      var unlockedTitle = l('secretItemUnlockedTitle');
+      var revealStage = l('secretItemRevealStage');
+      revealStage.hidden = false;
+      unlockedTitle.classList.add('boom-in');
+      setTimeout(function() {
+        unlockedTitle.classList.remove('boom-in');
+        unlockedTitle.classList.add('pan-up');
+        l('secretItemRewardName').textContent = config.item.itemName;
+        var rewardRarity = l('secretItemRewardRarity');
+        rewardRarity.textContent = config.item.rarity;
+        rewardRarity.className = 'item-rarity item-rarity-' + config.item.rarity.toLowerCase();
+        var itemReward = l('secretItemReward');
+        itemReward.hidden = false;
+        itemReward.classList.add('reveal');
+        var rewardImage = l('secretItemRewardImage');
+        rewardImage.className = 'item-reward-image item-rarity-' + config.item.rarity.toLowerCase() + ' rarity-glow';
+        rewardImage.src = config.item.image;
+        rewardImage.alt = config.item.itemName;
+        playItemSound(revealSound);
+        var glowSoundTimeout = setTimeout(function() {
+          playItemSound(l('itemGlowSound'));
+        }, 1600);
+        function dismissItemReveal() {
+          activation.removeEventListener('click', dismissItemReveal);
+          clearTimeout(glowSoundTimeout);
+          revealSound.pause();
+          revealSound.currentTime = 0;
+          activation.classList.remove('active', 'short-mode', 'item-unlock-mode');
+          activation.setAttribute('aria-hidden', 'true');
+          activationTitle.hidden = false;
+          activationTitle.textContent = 'SECRET GAME ACTIVATED';
+          activationTitle.setAttribute('data-text', 'SECRET GAME ACTIVATED');
+          revealStage.hidden = true;
+          unlockedTitle.classList.remove('pan-up');
+          itemReward.hidden = true;
+          itemReward.classList.remove('reveal');
+          rewardRarity.textContent = '';
+          rewardRarity.className = 'item-rarity';
+          rewardImage.className = '';
+          rewardImage.removeAttribute('src');
+          secretActivationStarted = false;
+          renderOwnedItems();
+          var searchInput = l('searchQuery');
+          if (searchInput) searchInput.value = '';
+          if (isFirstOwnedItem) {
+            var itemsHint = l('itemsUnlockedHint');
+            itemsHint.hidden = false;
+            itemsHint.classList.remove('fade-in');
+            void itemsHint.offsetWidth;
+            itemsHint.classList.add('fade-in');
+          }
+        }
+        activation.addEventListener('click', dismissItemReveal);
+      }, 700);
+    }, 700);
+  }, 1900);
+  return;
+}
+
+var launchTarget = new URL(destination, window.location.href).pathname.replace(/^\/+/, '');
+if (config.cinematic === 'short') {
+  activation.classList.add('active', 'short-mode');
+  activation.setAttribute('aria-hidden', 'false');
+  activationTitle.textContent = 'CHEAT CODE ACTIVATED';
+  activationTitle.setAttribute('data-text', 'CHEAT CODE ACTIVATED');
+  setTimeout(function() {
+    window.location.href = new URL(destination, window.location.href).href;
+  }, 1500);
+  return;
+}
+
 l('secretTerminal').textContent = '';
 var launchMessage = secretCode + ' is launching';
-var launchTarget = new URL(destination, window.location.href).pathname.replace(/^\/+/, '');
 var soundOne = l('secretSoundOne');
 var soundTwo = l('secretSoundTwo');
 var soundThree = l('secretSoundThree');
@@ -608,9 +1092,8 @@ function playSecretSound(sound) {
 
 soundOne.currentTime = 0;
 playSecretSound(soundOne);
-l('secretActivation').classList.add('active');
-l('secretActivation').setAttribute('aria-hidden', 'false');
-var activationTitle = document.querySelector('.secret-activation-title');
+activation.classList.add('active');
+activation.setAttribute('aria-hidden', 'false');
 
 function distortActivationTitle() {
   var maxX = Math.max(0, window.innerWidth - activationTitle.offsetWidth);
@@ -783,7 +1266,6 @@ function animateLaunchDots() {
     }
 
     if (progress >= 100) {
-      var activation = l('secretActivation');
       activation.classList.add('glitch-out');
       var glitchStartedAt = performance.now();
       setTimeout(function() {
