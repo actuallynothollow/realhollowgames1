@@ -39,6 +39,15 @@
     "image": "g/g/game 12364/img/gayity.png",
     "destination": "Settings.html",
     "cinematic": "short"
+   },
+  "MLGBABY": {
+    "item": true,
+    "codeName": "supermlg",
+    "itemName": "MLG",
+    "rarity": "rar",
+    "image": "g/g/game 12364/img/MGL!.png",
+    "destination": "Settings.html",
+    "cinematic": "short"
   }
 }
 
