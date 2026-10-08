@@ -1,4 +1,26 @@
 {
-  "ddlc": "Settings.html",
-  "israelisreal": "g/israelclicker.html"
+  "ddlc": {
+    "item": false,
+    "image": "img/hollow.png",
+    "rarity": "Common",
+    "destination": "Settings.html",
+    "cinematic": "short"
+  },
+  "butt": {
+    "item": false,
+    "image": "img/hollow.png",
+    "rarity": "Common",
+    "destination": "settings.html",
+    "cinematic": "long"
+  },
+  "verity": {
+    "item": true,
+    "codeName": "Verity",
+    "itemName": "Verity",
+    "rarity": "mythic",
+    "image": "g/g/game 12364/img/verity.png",
+    "destination": "Settings.html",
+    "cinematic": "short"
+  }
 }
+
