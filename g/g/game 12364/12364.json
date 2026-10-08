@@ -30,7 +30,7 @@
     "image": "g/g/game 12364/img/falsity.png",
     "destination": "Settings.html",
     "cinematic": "short"
-   },
+  },
   "48594": {
     "item": true,
     "codeName": "48594",
@@ -39,7 +39,7 @@
     "image": "g/g/game 12364/img/gayity.png",
     "destination": "Settings.html",
     "cinematic": "short"
-   },
+  },
   "MLGBABY": {
     "item": true,
     "codeName": "supermlg",
